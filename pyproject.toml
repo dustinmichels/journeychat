@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "journeychat"
+version = "0.1.0"
+description = ""
+authors = ["Dustin Michels <dustin@dustinmichels.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+fastapi = "^0.68.1"
+uvicorn = "^0.15.0"
+alembic = "^1.7.3"
+pydantic = "^1.8.2"
+SQLAlchemy = "^1.4.25"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+mypy = "^0.910"
+black = "^21.9b0"
+flake8 = "^3.9.2"
+pylint = "^2.11.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
