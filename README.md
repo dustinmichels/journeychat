@@ -16,6 +16,14 @@ Install python dependencies:
 poetry install
 ```
 
+Run database setup script:
+
+```sh
+poetry run ./prestart.sh
+```
+
+### Notes
+
 Database changes:
 
 ```sh
