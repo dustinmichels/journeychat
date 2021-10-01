@@ -18,10 +18,7 @@ def root() -> dict:
 
 # Set all CORS enabled origins
 if settings.BACKEND_CORS_ORIGINS:
-    print("yes")
     origins = [str(origin) for origin in settings.BACKEND_CORS_ORIGINS]
-    print(origins)
-
     app.add_middleware(
         CORSMiddleware,
         allow_origins=origins,

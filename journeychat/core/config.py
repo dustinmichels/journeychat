@@ -14,16 +14,18 @@ class Settings(BaseSettings):
     # e.g: '["http://localhost", "http://localhost:4200", "http://localhost:3000", \
     # "http://localhost:8080", "http://local.dockertoolbox.tiangolo.com"]'
     BACKEND_CORS_ORIGINS: List[AnyHttpUrl] = [
-        "http://localhost.tiangolo.com",
-        "https://localhost.tiangolo.com",
-        "http://localhost",
-        "http://localhost:8080",
-        "http://localhost:8002",
+        # "http://localhost.tiangolo.com",
+        # "https://localhost.tiangolo.com",
+        # "http://localhost",
+        # "http://localhost:8080",
+        # "http://localhost:8002",
+        "http://localhost:3000"
     ]
 
     SQLALCHEMY_DATABASE_URI: Optional[str] = "sqlite:///example.db"
     FIRST_SUPERUSER: EmailStr = "admin@journeychat.com"
-    FIRST_SUPERUSER_PW: str = "CHANGEME"
+    FIRST_SUPERUSER_USERNAME: str = "admin"
+    FIRST_SUPERUSER_PW: str = "admin"
 
     class Config:
         case_sensitive = True

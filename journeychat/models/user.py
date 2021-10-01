@@ -11,6 +11,7 @@ class User(Base):
     username = Column(String, nullable=True)
     display_name = Column(String, nullable=True)
     email = Column(String, index=True, nullable=False)
+    avatar = Column(String(256), nullable=True)
     is_superuser = Column(Boolean, default=False)
     hashed_password = Column(String, nullable=False)
     joined_rooms = relationship(

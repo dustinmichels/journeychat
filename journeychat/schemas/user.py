@@ -1,12 +1,13 @@
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, HttpUrl
 
 
 class UserBase(BaseModel):
     username: Optional[str]
     display_name: Optional[str]
     email: Optional[EmailStr] = None
+    avatar = HttpUrl
     is_superuser: bool = False
 
 

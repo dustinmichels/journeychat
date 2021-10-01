@@ -25,6 +25,8 @@ def login(
     """
 
     # TODO: should be email or username??
+    print(form_data.username)
+
     user = authenticate(email=form_data.username, password=form_data.password, db=db)
     if not user:
         raise HTTPException(status_code=400, detail="Incorrect username or password")

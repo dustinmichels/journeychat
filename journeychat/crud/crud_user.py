@@ -17,6 +17,12 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
         create_data.pop("password")
         db_obj = User(**create_data)
         db_obj.hashed_password = get_password_hash(obj_in.password)
+
+        # add avatar
+        if not db_obj.avatar:
+            seed = db_obj.username
+            db_obj.avatar = f"https://picsum.photos/seed/{seed}/200/"
+
         db.add(db_obj)
         db.commit()
 
