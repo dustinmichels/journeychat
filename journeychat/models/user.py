@@ -3,6 +3,8 @@ from sqlalchemy.orm import relationship
 
 from journeychat.db.base_class import Base
 
+from journeychat.models import joined_rooms
+
 
 class User(Base):
     id = Column(Integer, primary_key=True, index=True)
@@ -11,4 +13,6 @@ class User(Base):
     email = Column(String, index=True, nullable=False)
     is_superuser = Column(Boolean, default=False)
     hashed_password = Column(String, nullable=False)
-    rooms = relationship("Room", secondary="user_rooms", back_populates="users")
+    joined_rooms = relationship(
+        "Room", secondary="joined_rooms", back_populates="joined_users"
+    )

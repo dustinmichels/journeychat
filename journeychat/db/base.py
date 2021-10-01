@@ -3,4 +3,4 @@
 from journeychat.db.base_class import Base
 from journeychat.models.user import User
 from journeychat.models.room import Room
-from journeychat.models.user_rooms import User_Rooms
+from journeychat.models.joined_rooms import Joined_Rooms

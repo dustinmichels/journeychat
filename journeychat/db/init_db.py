@@ -10,17 +10,14 @@ logger = logging.getLogger(__name__)
 
 ROOMS = [
     {
-        # "id": 1,
         "name": "General",
         "is_private": False,
     },
     {
-        # "id": 2,
         "name": "Sci-Fi Lovers",
         "is_private": False,
     },
     {
-        # "id": 3,
         "name": "Python Fans",
         "is_private": False,
     },
@@ -52,13 +49,17 @@ def init_db(db: Session) -> None:
                 "Skipping creating superuser. User with email "
                 f"{settings.FIRST_SUPERUSER} already exists. "
             )
-        if not user.rooms:
+        if not user.joined_rooms:
             for r in ROOMS:
                 room_in = schemas.RoomCreate(
                     name=r["name"],
                     is_private=r["is_private"],
                 )
-                crud.room.create(db, obj_in=room_in)
+                room = crud.room.create(db, obj_in=room_in)
+
+                # link??
+                user.joined_rooms.append(room)
+
     else:
         logger.warning(
             "Skipping creating superuser.  FIRST_SUPERUSER needs to be "
