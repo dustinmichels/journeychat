@@ -7,7 +7,7 @@ class UserBase(BaseModel):
     username: Optional[str]
     display_name: Optional[str]
     email: Optional[EmailStr] = None
-    avatar = HttpUrl
+    avatar: Optional[HttpUrl] = None
     is_superuser: bool = False
 
 
