@@ -15,3 +15,9 @@ Install python dependencies:
 ```sh
 poetry install
 ```
+
+Database changes:
+
+```sh
+alembic revision --autogenerate -m "Add user table"
+```
