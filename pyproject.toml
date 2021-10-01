@@ -8,8 +8,10 @@ version = "0.1.0"
 SQLAlchemy = "^1.4.25"
 alembic = "^1.7.3"
 fastapi = "^0.68.1"
+passlib = {extras = ["bcrypt"], version = "^1.7.4"}
 pydantic = {extras = ["email"], version = "^1.8.2"}
 python = "^3.8"
+python-jose = {extras = ["cryptography"], version = "^3.3.0"}
 tenacity = "^8.0.1"
 uvicorn = "^0.15.0"
 
@@ -19,6 +21,9 @@ flake8 = "^3.9.2"
 mypy = "^0.910"
 pylint = "^2.11.1"
 pytest = "^5.2"
+
+[tool.pylint.'MESSAGES CONTROL']
+extension-pkg-whitelist = "pydantic"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
