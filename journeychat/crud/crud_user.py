@@ -1,18 +1,17 @@
 from typing import Any, Dict, Optional, Union
 
+from journeychat import models, schemas
+from journeychat.core.security import get_password_hash
+from journeychat.crud.base import CRUDBase
+from journeychat.models import User
 from sqlalchemy.orm import Session
 
-from journeychat.crud.base import CRUDBase
-from journeychat.models.user import User
-from journeychat.schemas.user import UserCreate, UserUpdate
-from journeychat.core.security import get_password_hash
 
-
-class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
+class CRUDUser(CRUDBase[User, schemas.UserCreate, schemas.UserUpdate]):
     def get_by_email(self, db: Session, *, email: str) -> Optional[User]:
         return db.query(User).filter(User.email == email).first()
 
-    def create(self, db: Session, *, obj_in: UserCreate) -> User:
+    def create(self, db: Session, *, obj_in: schemas.UserCreate) -> User:
         create_data = obj_in.dict()
         create_data.pop("password")
         db_obj = User(**create_data)
@@ -28,18 +27,18 @@ class CRUDUser(CRUDBase[User, UserCreate, UserUpdate]):
 
         return db_obj
 
-    def update(
-        self, db: Session, *, db_obj: User, obj_in: Union[UserUpdate, Dict[str, Any]]
-    ) -> User:
-        if isinstance(obj_in, dict):
-            update_data = obj_in
-        else:
-            update_data = obj_in.dict(exclude_unset=True)
+    # def update(
+    #     self, db: Session, *, db_obj: User, obj_in: Union[UserUpdate, Dict[str, Any]]
+    # ) -> User:
+    #     if isinstance(obj_in, dict):
+    #         update_data = obj_in
+    #     else:
+    #         update_data = obj_in.dict(exclude_unset=True)
 
-        return super().update(db, db_obj=db_obj, obj_in=update_data)
+    #     return super().update(db, db_obj=db_obj, obj_in=update_data)
 
-    def is_superuser(self, user: User) -> bool:
-        return user.is_superuser
+    # def is_superuser(self, user: User) -> bool:
+    #     return user.is_superuser
 
 
 user = CRUDUser(User)

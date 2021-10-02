@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 
 from journeychat.db.base_class import Base
 
+# leave in - for import order
 from journeychat.models import joined_rooms
 
 
