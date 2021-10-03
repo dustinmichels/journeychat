@@ -26,7 +26,7 @@ def read_rooms(
     """
     Retrieve all rooms.
     """
-    #TODO: if not private
+    # TODO: if not private
     items = crud.room.get_multi(db, skip=skip, limit=limit)
     return items
 
@@ -58,15 +58,12 @@ def join_room(
     if not room:
         raise HTTPException(status_code=404, detail=f"Room with ID {room_id} not found")
 
+    # TODO: use crud?
     joined_rooms = [x for x in current_user.joined_rooms]
     joined_rooms.append(room)
-
     crud.user.update(db=db, db_obj=current_user, obj_in={"joined_rooms": joined_rooms})
 
     return room
-
-    # db.commit()
-    # db.refresh(db_obj)
 
 
 # @router.get("/", response_model=List[Room])
