@@ -3,6 +3,7 @@ from typing import Any, Dict, Optional, Union
 from journeychat import models, schemas
 from journeychat.core.security import get_password_hash
 from journeychat.crud.base import CRUDBase
+from journeychat import crud
 from journeychat.models import User
 from sqlalchemy.orm import Session
 
@@ -21,6 +22,10 @@ class CRUDUser(CRUDBase[User, schemas.UserCreate, schemas.UserUpdate]):
         if not db_obj.avatar:
             seed = db_obj.username
             db_obj.avatar = f"https://picsum.photos/seed/{seed}/200/"
+
+        # add to first room
+        first_room = crud.room.get(db, 1)
+        db_obj.joined_rooms.append(first_room)
 
         db.add(db_obj)
         db.commit()

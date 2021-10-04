@@ -58,7 +58,7 @@ def init_db(db: Session) -> None:
                 )
                 room = crud.room.create(db, obj_in=room_in)
 
-                # link??
+                # do thru crud?
                 user.joined_rooms.append(room)
 
     else:
