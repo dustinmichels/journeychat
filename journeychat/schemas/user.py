@@ -16,6 +16,9 @@ class UserCreate(UserBase):
     email: EmailStr
     password: str
 
+    # autogenerate avatar image
+    # avatar: HttpUrl = f"https://picsum.photos/seed/{username}/200/"
+
 
 # Properties to receive via API on update
 class UserUpdate(UserBase):
@@ -23,7 +26,7 @@ class UserUpdate(UserBase):
 
 
 class UserInDBBase(UserBase):
-    id: Optional[int] = None
+    id: int
 
     class Config:
         orm_mode = True

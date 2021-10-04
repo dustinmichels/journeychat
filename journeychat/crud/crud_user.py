@@ -18,6 +18,9 @@ class CRUDUser(CRUDBase[User, schemas.UserCreate, schemas.UserUpdate]):
         db_obj = User(**create_data)
         db_obj.hashed_password = get_password_hash(obj_in.password)
 
+        # <--- INIT DEFAULTS
+        # TODO: move this initial logic to Pydantic model??
+
         # add avatar
         if not db_obj.avatar:
             seed = db_obj.username
@@ -25,7 +28,9 @@ class CRUDUser(CRUDBase[User, schemas.UserCreate, schemas.UserUpdate]):
 
         # add to first room
         first_room = crud.room.get(db, 1)
-        db_obj.joined_rooms.append(first_room)
+        if first_room:
+            db_obj.joined_rooms.append(first_room)
+        # INIT DEFAULTS --->
 
         db.add(db_obj)
         db.commit()

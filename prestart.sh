@@ -7,4 +7,4 @@ python ./journeychat/backend_pre_start.py
 alembic upgrade head
 
 # Create initial data in DB
-python ./journeychat/initial_data.py
+python ./journeychat/initialize_data.py

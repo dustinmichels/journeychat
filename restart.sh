@@ -14,4 +14,4 @@ alembic revision --autogenerate -m "Add tables"
 alembic upgrade head
 
 # Create initial data in DB
-python ./journeychat/initial_data.py
+python ./journeychat/initialize_data.py

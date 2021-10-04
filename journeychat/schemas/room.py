@@ -19,7 +19,6 @@ class RoomUpdate(RoomBase):
 # Properties shared by models stored in DB
 class RoomInDBBase(RoomBase):
     id: int
-    # submitter_id: int
 
     class Config:
         orm_mode = True

@@ -31,6 +31,48 @@ def read_rooms(
     return items
 
 
+@router.get("/{room_id}", status_code=200, response_model=Room)
+def fetch_room(
+    *,
+    room_id: int,
+    db: Session = Depends(deps.get_db),
+) -> Any:
+    """
+    Fetch a single room by ID
+    """
+    result = crud.room.get(db=db, id=room_id)
+    if not result:
+        # the exception is raised, not returned - you will get a validation
+        # error otherwise.
+        raise HTTPException(status_code=404, detail=f"Room with ID {room_id} not found")
+
+    return result
+
+
+@router.post("/", status_code=201, response_model=Room)
+def create_room(*, room_in: RoomCreate, db: Session = Depends(deps.get_db)) -> dict:
+    """
+    Create a new room in the database.
+    """
+    room = crud.room.create(db=db, obj_in=room_in)
+
+    return room
+
+
+@router.get("/messages", response_model=List[Room])
+def fetch_room_messages(
+    db: Session = Depends(deps.get_db),
+    skip: int = 0,
+    limit: int = 100,
+) -> Any:
+    """
+    Retrieve all rooms.
+    """
+    # TODO: if not private
+    items = crud.room.get_multi(db, skip=skip, limit=limit)
+    return items
+
+
 @router.get("/joined/", response_model=List[Room])
 def joined_rooms(
     db: Session = Depends(deps.get_db),
@@ -66,64 +108,17 @@ def join_room(
     return room
 
 
-# @router.get("/", response_model=List[Room])
-# def read_items(
+# @router.get("/search/", status_code=200, response_model=RoomSearchResults)
+# def search_rooms(
+#     *,
+#     keyword: str = Query(None, min_length=3, example="chicken"),
+#     max_results: Optional[int] = 10,
 #     db: Session = Depends(deps.get_db),
-#     skip: int = 0,
-#     limit: int = 100,
-#     current_user: models.User = Depends(deps.get_current_active_user),
-# ) -> Any:
+# ) -> dict:
 #     """
-#     Retrieve items.
+#     Search for rooms based on label keyword
 #     """
-#     if crud.user.is_superuser(current_user):
-#         items = crud.item.get_multi(db, skip=skip, limit=limit)
-#     else:
-#         items = crud.item.get_multi_by_owner(
-#             db=db, owner_id=current_user.id, skip=skip, limit=limit
-#         )
-#     return items
+#     rooms = crud.room.get_multi(db=db, limit=max_results)
+#     results = filter(lambda room: keyword.lower() in room.name.lower(), rooms)
 
-
-@router.get("/{room_id}", status_code=200, response_model=Room)
-def fetch_room(
-    *,
-    room_id: int,
-    db: Session = Depends(deps.get_db),
-) -> Any:
-    """
-    Fetch a single room by ID
-    """
-    result = crud.room.get(db=db, id=room_id)
-    if not result:
-        # the exception is raised, not returned - you will get a validation
-        # error otherwise.
-        raise HTTPException(status_code=404, detail=f"Room with ID {room_id} not found")
-
-    return result
-
-
-@router.get("/search/", status_code=200, response_model=RoomSearchResults)
-def search_rooms(
-    *,
-    keyword: str = Query(None, min_length=3, example="chicken"),
-    max_results: Optional[int] = 10,
-    db: Session = Depends(deps.get_db),
-) -> dict:
-    """
-    Search for rooms based on label keyword
-    """
-    rooms = crud.room.get_multi(db=db, limit=max_results)
-    results = filter(lambda room: keyword.lower() in room.name.lower(), rooms)
-
-    return {"results": list(results)}
-
-
-@router.post("/", status_code=201, response_model=Room)
-def create_room(*, room_in: RoomCreate, db: Session = Depends(deps.get_db)) -> dict:
-    """
-    Create a new room in the database.
-    """
-    room = crud.room.create(db=db, obj_in=room_in)
-
-    return room
+#     return {"results": list(results)}

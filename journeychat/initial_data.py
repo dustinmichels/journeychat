@@ -1,23 +1,43 @@
-import logging
+from journeychat.schemas import room
 
-from journeychat.db.base import Base
-from journeychat.db.init_db import init_db
-from journeychat.db.session import SessionLocal
+from datetime import datetime
 
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+ROOMS = [
+    {
+        "name": "General",
+        "is_private": False,
+    },
+    {
+        "name": "Sci-Fi Lovers",
+        "is_private": False,
+    },
+    {
+        "name": "Python Fans",
+        "is_private": False,
+    },
+]
 
+USERS = [
+    {
+        "username": "dustin",
+        "email": "dustin@dustin.com",
+        "password": "dustin",
+        "display_name": "Dusty",
+    },
+    {
+        "username": "joe",
+        "email": "joe@joe.com",
+        "password": "joe",
+        "display_name": "Joe",
+    },
+]
 
-def init() -> None:
-    db = SessionLocal()
-    init_db(db)
-
-
-def main() -> None:
-    logger.info("Creating initial data")
-    init()
-    logger.info("Initial data created")
-
-
-if __name__ == "__main__":
-    main()
+MESSAGES = [
+    {
+        # "email": "dustin@dustin.com",
+        "user_id": 2,
+        "room_id": 1,
+        "timestamp": datetime(2021, 10, 4, 2, 20, 35),
+        "text": "hello friends!",
+    }
+]
