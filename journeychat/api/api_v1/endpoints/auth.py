@@ -16,7 +16,7 @@ from journeychat.models.user import User
 router = APIRouter()
 
 
-@router.post("/login")
+@router.post("/login", response_model=schemas.Token)
 def login(
     db: Session = Depends(deps.get_db), form_data: OAuth2PasswordRequestForm = Depends()
 ) -> Any:

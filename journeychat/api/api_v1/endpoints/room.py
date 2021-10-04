@@ -8,6 +8,8 @@ from sqlalchemy.orm import Session
 from journeychat import crud
 from journeychat.api import deps
 from journeychat.schemas.room import Room, RoomCreate, RoomSearchResults
+from journeychat import schemas
+
 from journeychat.schemas.user import UserUpdate
 
 
@@ -59,18 +61,21 @@ def create_room(*, room_in: RoomCreate, db: Session = Depends(deps.get_db)) -> d
     return room
 
 
-@router.get("/messages", response_model=List[Room])
+@router.get("/{room_id}/messages", response_model=List[schemas.Message])
 def fetch_room_messages(
+    *,
+    room_id: int,
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
 ) -> Any:
     """
-    Retrieve all rooms.
+    Retrieve all messages for given rooms.
     """
-    # TODO: if not private
-    items = crud.room.get_multi(db, skip=skip, limit=limit)
-    return items
+    messages = crud.message.get_multi_by_room(
+        db=db, room_id=room_id, skip=skip, limit=limit
+    )
+    return messages
 
 
 @router.get("/joined/", response_model=List[Room])
