@@ -2,15 +2,15 @@
 
 ## AUTH
 
-- `/auth/login` (POST)
-- `/auth/signup` (POST)
-- `/auth/me` (GET)
+- `/auth/login` (POST) ✅
+- `/auth/signup` (POST) ✅
+- `/auth/me` (GET) ✅
 
 ## ROOMS
 
-- `/rooms/` (GET)
+- `/rooms/` (GET) ❌
   - List all rooms that are not private
-- `/rooms/` (POST)
+- `/rooms/` (POST) ❌
   - Create a new room
   - Request body:
     ```json
@@ -20,27 +20,33 @@
   - List rooms the current user has joined
 - `/rooms/{room_id}` (GET)
   - Get info about specific room
-- `/rooms/{room_id}` (PUT)
+- `/rooms/{room_id}` (PUT) ❌
   - Update specific room, if owner
-- `/rooms/{room_id}` (DELETE)
+- `/rooms/{room_id}` (DELETE) ❌
   - Delete specific room, if owner
 
 ## Actions
 
-- `actions/invite/{room_id}/{username}` (POST)
+- `actions/invite/{room_id}/{username}` (POST) ❌
   - Invite particular user to particular room
-- `actions/join/{room_id}/` (POST)
+- `actions/join/{room_id}/` (POST) ❌
   - Join a particular room
 
 ## Messages
 
-- `/messages/room/{room_id}` (GET)
+- `/messages/room/{room_id}` (GET) ❌
   - Get messages for particular room
 
 ## WebSockets
 
-- `ws?token=`
-  - Send message via websockets
+Connect to websocket:
+`ws://.../ws?token=`
+
+Send messages as stringified JSON:
+
+```json
+{ "user_id": int, "room_id": int, "text": str }
+```
 
 Either:
 

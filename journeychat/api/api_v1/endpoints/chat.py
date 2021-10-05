@@ -7,6 +7,9 @@ from journeychat.api import deps
 from journeychat.models.user import User
 from sqlalchemy.orm import Session
 
+from fastapi.encoders import jsonable_encoder
+
+
 router = APIRouter()
 
 
@@ -41,14 +44,19 @@ async def websocket_endpoint(
     await manager.connect(websocket)
     try:
         while True:
-            raw_data = await websocket.receive_text()
-            data = json.loads(raw_data)
-            message_obj = schemas.MessageCreate(**data)
+            data = await websocket.receive_text()
 
-            # add to db
+            # commit message to db
+            json_data = json.loads(data)
+            message_obj = schemas.MessageCreate(**json_data)
             crud.message.create(db=db, obj_in=message_obj)
 
-            await manager.broadcast(f"{current_user.username} says: {message_obj.text}")
+            # For future use?
+            # json_data = jsonable_encoder(message_obj)
+            # json_data_str = json.dumps(json_data)
+
+            await manager.broadcast(data)
+            # await manager.broadcast(f"{current_user.username} says: {message_obj.text}")
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)
