@@ -40,18 +40,8 @@ class CRUDUser(CRUDBase[User, schemas.UserCreate, schemas.UserUpdate]):
 
         return db_obj
 
-    # def update(
-    #     self, db: Session, *, db_obj: User, obj_in: Union[UserUpdate, Dict[str, Any]]
-    # ) -> User:
-    #     if isinstance(obj_in, dict):
-    #         update_data = obj_in
-    #     else:
-    #         update_data = obj_in.dict(exclude_unset=True)
-
-    #     return super().update(db, db_obj=db_obj, obj_in=update_data)
-
-    # def is_superuser(self, user: User) -> bool:
-    #     return user.is_superuser
+    def is_superuser(self, user: User) -> bool:
+        return user.is_superuser
 
 
 user = CRUDUser(User)

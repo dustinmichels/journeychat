@@ -20,9 +20,9 @@
   - List rooms the current user has joined
 - `/rooms/{room_id}` (GET) ✅
   - Get info about specific room, if authorized
-- `/rooms/{room_id}` (PUT) ❌
+- `/rooms/{room_id}` (PUT) ✅
   - Update specific room, if owner
-- `/rooms/{room_id}` (DELETE) ❌
+- `/rooms/{room_id}` (DELETE) ✅
   - Delete specific room, if owner
 
 ## Members
@@ -32,15 +32,15 @@
 
 ## Actions
 
-- `actions/invite/{room_id}/{username}` (POST) ❌
+- `actions/invite/{room_id}/{username}` (PUT) ✅
   - Invite particular user to particular room
   - They will be automatically added
-- `actions/join/{room_id}/` (POST) ❌
+- `actions/join/{room_id}/` (PUT) ✅
   - Join a particular room, if public
 
 ## Messages
 
-- `/messages/room/{room_id}` (GET) ❌
+- `/messages/room/{room_id}` (GET) ✅
   - Get messages for particular room
 
 ## WebSockets

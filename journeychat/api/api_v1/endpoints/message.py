@@ -25,13 +25,11 @@ def get_messages_for_room(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
+    room: Room = Depends(deps.get_room_authenticated),
 ) -> Any:
     """
     Retrieve all messages for given rooms.
     """
-    # TODO: check if user in room
-    # ...
-
     # get messages for room
     messages = crud.message.get_multi_by_room(
         db=db, room_id=room_id, skip=skip, limit=limit

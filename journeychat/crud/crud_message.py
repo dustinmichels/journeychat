@@ -18,13 +18,21 @@ class CRUDMessage(CRUDBase[Message, MessageCreate, MessageUpdate]):
     def get_multi_by_room(
         self, db: Session, *, room_id: int, skip: int = 0, limit: int = 100
     ) -> List[Message]:
-        return (
+        """
+        Get messages for a given room.
+        Messages are sorted in descending order, so that `limit` applies to n most recent messages
+        But returned in ascending order.
+        """
+        res = (
             db.query(self.model)
             .filter(Message.room_id == room_id)
+            .order_by(Message.timestamp.desc())
             .offset(skip)
             .limit(limit)
             .all()
         )
+        res.reverse()
+        return res
 
 
 message = CRUDMessage(Message)
