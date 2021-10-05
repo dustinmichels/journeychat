@@ -1,18 +1,17 @@
-from typing import Any, List, Optional
+from typing import Any, List
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from journeychat import crud, models, schemas
+from journeychat import crud, schemas
 from journeychat.api import deps
-from journeychat.models.user import User
-from journeychat.schemas.room import Room, RoomCreate, RoomSearchResults
-from journeychat.schemas.user import UserUpdate
+from journeychat.models import User, Room
+
 
 router = APIRouter()
 
 
-@router.get("/", response_model=List[Room])
+@router.get("/", response_model=List[schemas.Room])
 def read_rooms(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
@@ -25,15 +24,16 @@ def read_rooms(
     return items
 
 
-@router.post("/", status_code=201, response_model=Room)
+@router.post("/", status_code=201, response_model=schemas.Room)
 def create_room(
     *,
-    room_in: RoomCreate,
+    room_in: schemas.RoomCreate,
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user),
 ) -> dict:
     """
     Create a new room in the database.
+    Creator will be marked as owner, and added as member.
     """
     room = crud.room.create_with_owner(db=db, obj_in=room_in, owner_id=current_user.id)
     return room
@@ -47,18 +47,19 @@ def update_room(
     room: Room = Depends(deps.get_room_if_owner),
 ) -> Any:
     """
-    Update an item.
+    Update an room. Must be owner.
     """
     return crud.room.update(db=db, db_obj=room, obj_in=item_in)
 
 
-@router.get("/{room_id}", status_code=200, response_model=Room)
+@router.get("/{room_id}", status_code=200, response_model=schemas.Room)
 def read_room(
     *,
     room: Room = Depends(deps.get_room_if_member),
 ) -> Any:
     """
-    Fetch a single room by ID, if public or user is member.
+    Get a single room by ID.
+    Room must be public, or current user must be member.
     """
     return room
 
@@ -76,15 +77,15 @@ def delete_room(
     return crud.room.remove(db=db, id=room_id)
 
 
-@router.get("/joined/", response_model=List[Room])
-def joined_rooms(
+@router.get("/joined/", response_model=List[schemas.Room])
+def get_joined_rooms(
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user),
 ) -> Any:
     """
     Retrieve rooms signed-in user has joined.
     """
-    return current_user.joined_rooms
+    return crud.user.get_joined_rooms(user=current_user)
 
 
 # @router.get("/search/", status_code=200, response_model=RoomSearchResults)

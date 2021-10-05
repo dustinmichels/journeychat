@@ -1,18 +1,15 @@
-from typing import Any, List, Optional
+from typing import Any
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.orm import Session
-
+from fastapi import APIRouter, Depends, HTTPException
 from journeychat import crud, schemas
 from journeychat.api import deps
-from journeychat.models.user import User
-from journeychat.schemas.room import Room, RoomCreate, RoomSearchResults
-from journeychat.schemas.user import UserUpdate
+from journeychat.models import Room, User
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 
 
-@router.put("/join/{room_id}", response_model=Room)
+@router.put("/join/{room_id}", response_model=schemas.Room)
 def join_room(
     *,
     db: Session = Depends(deps.get_db),
@@ -25,7 +22,7 @@ def join_room(
     return crud.room.add_member(db=db, room=room, user=current_user)
 
 
-@router.put("/invite/{room_id}/{username}", response_model=Room)
+@router.put("/invite/{room_id}/{username}", response_model=schemas.Room)
 def add_user(
     username: str,
     *,

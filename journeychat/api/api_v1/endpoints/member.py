@@ -1,14 +1,9 @@
-import asyncio
-from typing import Any, List, Optional
+from typing import Any, List
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.orm import Session
-
+from fastapi import APIRouter, Depends
 from journeychat import crud, schemas
 from journeychat.api import deps
-from journeychat.models.user import User
-from journeychat.schemas.room import Room, RoomCreate, RoomSearchResults
-from journeychat.schemas.user import UserUpdate
+from journeychat.models import Room
 
 router = APIRouter()
 

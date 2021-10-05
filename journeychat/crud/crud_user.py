@@ -1,8 +1,8 @@
-from typing import Any, Dict, Optional, Union
+from typing import List, Optional
 
 from sqlalchemy.orm import Session
 
-from journeychat import crud, models, schemas
+from journeychat import crud, schemas
 from journeychat.core.security import get_password_hash
 from journeychat.crud.base import CRUDBase
 from journeychat.models import User
@@ -14,6 +14,9 @@ class CRUDUser(CRUDBase[User, schemas.UserCreate, schemas.UserUpdate]):
 
     def get_by_username(self, db: Session, *, username: str) -> Optional[User]:
         return db.query(User).filter(User.username == username).first()
+
+    def get_joined_rooms(self, *, user: User) -> List[schemas.Room]:
+        return user.joined_rooms
 
     def create(self, db: Session, *, obj_in: schemas.UserCreate) -> User:
         create_data = obj_in.dict()

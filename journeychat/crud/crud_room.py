@@ -25,28 +25,28 @@ class CRUDRoom(CRUDBase[Room, RoomCreate, RoomUpdate]):
     def create_with_owner(
         self, db: Session, *, obj_in: RoomCreate, owner_id: int
     ) -> Room:
-        # create room
-        db_obj = self._create_room_with_owner(db=db, obj_in=obj_in, owner_id=owner_id)
-        # add owner as member
+        """Create new room, assigning creator as owner and adding them as a member."""
+
+        def _create_room_with_owner() -> Room:
+            obj_in_data = jsonable_encoder(obj_in)
+            db_obj = self.model(**obj_in_data, owner_id=owner_id)
+            db.add(db_obj)
+            db.commit()
+            db.refresh(db_obj)
+            return db_obj
+
+        db_obj = _create_room_with_owner()
         owner = crud.user.get(db=db, id=owner_id)
         return self.add_member(db=db, room=db_obj, user=owner)
 
-    def _create_room_with_owner(
-        self, db: Session, *, obj_in: RoomCreate, owner_id: int
-    ) -> Room:
-        obj_in_data = jsonable_encoder(obj_in)
-        db_obj = self.model(**obj_in_data, owner_id=owner_id)
-        db.add(db_obj)
-        db.commit()
-        db.refresh(db_obj)
-        return db_obj
-
     def add_member(self, db: Session, *, room: Room, user: User) -> Room:
+        """Add member to room."""
         members = [x for x in room.members]
         members.append(user)
         return self.update(db=db, db_obj=room, obj_in={"members": members})
 
-    def get_members(self, *, room: Room):
+    def get_members(self, *, room: Room) -> List[User]:
+        """Return list of members of a room"""
         return room.members
 
 

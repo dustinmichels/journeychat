@@ -59,4 +59,5 @@ async def websocket_endpoint(
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)
-        await manager.broadcast(f"{current_user.username} left the chat")
+        status_msg = dict(text=f"{current_user.username} left the chat")
+        await manager.broadcast(json.dumps(status_msg))

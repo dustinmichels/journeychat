@@ -2,12 +2,11 @@ from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
-from sqlalchemy.orm.session import Session
-
 from journeychat import crud, schemas
 from journeychat.api import deps
 from journeychat.core.auth import authenticate, create_access_token
-from journeychat.models.user import User
+from journeychat.models import User
+from sqlalchemy.orm.session import Session
 
 router = APIRouter()
 
@@ -28,15 +27,6 @@ def login(
     }
 
 
-@router.get("/me", response_model=schemas.User)
-def read_users_me(current_user: User = Depends(deps.get_current_user)):
-    """
-    Fetch the current logged in user.
-    """
-    user = current_user
-    return user
-
-
 @router.post("/signup", response_model=schemas.User, status_code=201)
 def create_user_signup(
     *,
@@ -46,13 +36,24 @@ def create_user_signup(
     """
     Create new user without the need to be logged in.
     """
-
-    user = db.query(User).filter(User.email == user_in.email).first()
-    if user:
+    # check if email already exists
+    if crud.user.get_by_email(db=db, email=user_in.email):
         raise HTTPException(
             status_code=400,
-            detail="The user with this email already exists in the system",
+            detail="A user with this email already exists in the system",
         )
-    user = crud.user.create(db=db, obj_in=user_in)
+    # check if username already exists
+    if crud.user.get_by_username(db=db, username=user_in.username):
+        raise HTTPException(
+            status_code=400,
+            detail="A user with this username already exists in the system",
+        )
+    return crud.user.create(db=db, obj_in=user_in)
 
-    return user
+
+@router.get("/me", response_model=schemas.User)
+def read_users_me(current_user: User = Depends(deps.get_current_user)):
+    """
+    Fetch the current logged in user.
+    """
+    return current_user

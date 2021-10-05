@@ -1,14 +1,10 @@
-import asyncio
-from typing import Any, List, Optional
+from typing import Any, List
 
-from fastapi import APIRouter, Depends, HTTPException, Query
-from sqlalchemy.orm import Session
-
+from fastapi import APIRouter, Depends
 from journeychat import crud, schemas
 from journeychat.api import deps
-from journeychat.models.user import User
-from journeychat.schemas.room import Room, RoomCreate, RoomSearchResults
-from journeychat.schemas.user import UserUpdate
+from journeychat.models import Room
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 
@@ -25,8 +21,6 @@ def get_messages_for_room(
     """
     Retrieve all messages for given rooms.
     """
-    # get messages for room
-    messages = crud.message.get_multi_by_room(
+    return crud.message.get_multi_by_room(
         db=db, room_id=room_id, skip=skip, limit=limit
     )
-    return messages

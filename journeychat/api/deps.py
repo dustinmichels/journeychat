@@ -1,18 +1,15 @@
 from typing import Generator, Optional
 
-from fastapi import Cookie, Depends, HTTPException, Query, WebSocket, status
+from fastapi import Depends, HTTPException, Query, WebSocket, status
 from jose import JWTError, jwt
-from pydantic import BaseModel
 from sqlalchemy.orm.session import Session
 
 from journeychat import crud, models, schemas
 from journeychat.core.auth import oauth2_scheme
 from journeychat.core.config import settings
 from journeychat.db.session import SessionLocal
+from journeychat.models.room import Room
 from journeychat.models.user import User
-
-# class TokenData(BaseModel):
-#     username: Optional[str] = None
 
 
 def get_db() -> Generator:
@@ -53,7 +50,7 @@ def get_room_if_member(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
     room_id: int,
-):
+) -> Room:
     """
     Return room with given ID, if user is member or room is public.
     Otherwise, raise http error.
@@ -72,7 +69,7 @@ def get_room_if_member(
 def get_room_if_owner(
     current_user: models.User = Depends(get_current_user),
     room: models.Room = Depends(get_room_if_member),
-):
+) -> Room:
     """
     Return room if owner, otherwise return http error
     """
