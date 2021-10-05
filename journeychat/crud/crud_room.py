@@ -4,6 +4,8 @@ from journeychat.models.room import Room
 from journeychat.models.user import User
 from journeychat.schemas.room import RoomCreate, RoomUpdate
 
+from journeychat import crud
+
 from fastapi.encoders import jsonable_encoder
 
 from sqlalchemy.orm import Session
@@ -22,6 +24,15 @@ class CRUDRoom(CRUDBase[Room, RoomCreate, RoomUpdate]):
         )
 
     def create_with_owner(
+        self, db: Session, *, obj_in: RoomCreate, owner_id: int
+    ) -> Room:
+        # create room
+        db_obj = self._create_room_with_owner(db=db, obj_in=obj_in, owner_id=owner_id)
+        # add owner as member
+        owner = crud.user.get(db=db, id=owner_id)
+        return self.add_member(db=db, room=db_obj, user=owner)
+
+    def _create_room_with_owner(
         self, db: Session, *, obj_in: RoomCreate, owner_id: int
     ) -> Room:
         obj_in_data = jsonable_encoder(obj_in)

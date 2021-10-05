@@ -41,23 +41,31 @@ def init_db(db: Session) -> None:
     # crud.room.create_with_owner(db=db, obj_in=room_in, owner_id=current_user.id)
 
     # --- INIT OTHER DATA FROM FILE ---
-    # Init Rooms
-    for r in ROOMS:
-        room_in = schemas.RoomCreate(name=r["name"], is_private=r["is_private"])
-        _ = crud.room.create_with_owner(
-            db, obj_in=room_in, owner_id=r.get("owner_id", 1)
-        )
-
-    # # Init Users
+    # Init Users
+    users = []
     for u in USERS:
         user_in = schemas.UserCreate(
             display_name=u["display_name"],
             email=u["email"],
             username=u["username"],
-            # is_superuser=u.get("is_superuser", False),
             password=u["password"],
         )
-        _ = crud.user.create(db, obj_in=user_in)
+        user = crud.user.create(db, obj_in=user_in)
+        users.append(user)
+
+    # Init Rooms
+    rooms = []
+    for r in ROOMS:
+        room_in = schemas.RoomCreate(name=r["name"], is_private=r["is_private"])
+        room = crud.room.create_with_owner(
+            db, obj_in=room_in, owner_id=r.get("owner_id", 1)
+        )
+        rooms.append(room)
+
+    # Add all users to the first room
+    for user in users:
+        crud.room.add_member(db=db, room=rooms[0], user=user)
+
 
     # Add some messages
     for m in MESSAGES:

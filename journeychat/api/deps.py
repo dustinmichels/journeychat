@@ -48,6 +48,28 @@ async def get_current_user(
     return user
 
 
+def get_room_authenticated(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+    *,
+    room_id: int,
+):
+    """
+    Return room with given ID
+        if: room is public or user is a member
+        else: raise http error
+    """
+    room = crud.room.get(db=db, id=room_id)
+    if not room:
+        raise HTTPException(status_code=404, detail=f"Room with ID {room_id} not found")
+    if room.is_private and current_user not in room.members:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Room with ID {room_id} not found, or you don't have permission to view",
+        )
+    return room
+
+
 # --- Websocket Stuff ----
 
 

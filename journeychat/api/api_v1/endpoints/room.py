@@ -52,22 +52,12 @@ def joined_rooms(
 @router.get("/{room_id}", status_code=200, response_model=Room)
 def fetch_room(
     *,
-    room_id: int,
-    db: Session = Depends(deps.get_db),
-    current_user: User = Depends(deps.get_current_user),
+    room: Room = Depends(deps.get_room_authenticated),
 ) -> Any:
     """
-    Fetch a single room by ID. Must be public or user must be member.
+    Fetch a single room by ID.
+    Use dependency injection to assert: must be public or user must be member.
     """
-    room = crud.room.get(db=db, id=room_id)
-    if not room:
-        raise HTTPException(status_code=404, detail=f"Room with ID {room_id} not found")
-    # must be member, or room must be public
-    if room.is_private and room not in current_user.joined_rooms:
-        raise HTTPException(
-            status_code=404,
-            detail=f"Room with ID {room_id} not found, or you don't have permission to view",
-        )
     return room
 
 
