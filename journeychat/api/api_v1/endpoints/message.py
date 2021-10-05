@@ -1,10 +1,11 @@
 from typing import Any, List
 
 from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
+
 from journeychat import crud, schemas
 from journeychat.api import deps
 from journeychat.models import Room
-from sqlalchemy.orm import Session
 
 router = APIRouter()
 

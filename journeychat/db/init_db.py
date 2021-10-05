@@ -1,5 +1,4 @@
 import logging
-from typing import List
 
 from sqlalchemy.orm import Session
 
@@ -7,7 +6,6 @@ from journeychat import crud, schemas
 from journeychat.core.config import settings
 from journeychat.db import base  # noqa: F401
 from journeychat.initial_data import MESSAGES, ROOMS, USERS
-from journeychat.schemas import room
 
 logger = logging.getLogger(__name__)
 
@@ -36,11 +34,6 @@ def init_db(db: Session) -> None:
                 f"{settings.FIRST_SUPERUSER} already exists. "
             )
 
-    # # Add some dummy data
-    # crud.room.create(db, obj_in=room_in)
-    # crud.room.create_with_owner(db=db, obj_in=room_in, owner_id=current_user.id)
-
-    # --- INIT OTHER DATA FROM FILE ---
     # Init Users
     users = []
     for u in USERS:

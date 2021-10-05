@@ -1,3 +1,8 @@
+"""
+Note: This file is largely unchanged from FastApi / JWT Tutorial
+    https://christophergs.com/tutorials/ultimate-fastapi-tutorial-pt-10-auth-jwt/
+"""
+
 from datetime import datetime, timedelta
 from typing import List, MutableMapping, Optional, Union
 

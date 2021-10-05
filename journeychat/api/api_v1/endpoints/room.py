@@ -5,8 +5,7 @@ from sqlalchemy.orm import Session
 
 from journeychat import crud, schemas
 from journeychat.api import deps
-from journeychat.models import User, Room
-
+from journeychat.models import Room, User
 
 router = APIRouter()
 

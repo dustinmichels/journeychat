@@ -1,4 +1,3 @@
-from datetime import datetime
 from typing import List
 
 from sqlalchemy.orm import Session
@@ -10,7 +9,7 @@ from journeychat.schemas.message import MessageCreate, MessageUpdate
 
 class CRUDMessage(CRUDBase[Message, MessageCreate, MessageUpdate]):
     def create(self, db: Session, *, obj_in: MessageCreate) -> Message:
-        """Override create function to omit json encoder step"""
+        """Override base create function, so as to omit json encoder step"""
         create_data = obj_in.dict()
         db_obj = Message(**create_data)
         db.add(db_obj)
@@ -22,8 +21,9 @@ class CRUDMessage(CRUDBase[Message, MessageCreate, MessageUpdate]):
     ) -> List[Message]:
         """
         Get messages for a given room.
-        Messages are sorted in descending order, so that `limit` applies to n most recent messages
-        But returned in ascending order.
+
+        Messages are sorted in descending order, so that `limit` applies
+        to "n" most recent messages, but then returned in ascending order.
         """
         res = (
             db.query(self.model)

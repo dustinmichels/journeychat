@@ -1,3 +1,10 @@
+"""
+Taken from template: https://github.com/tiangolo/full-stack-fastapi-postgresql
+
+This base class extends sqlalchemy base model,
+allowing for autonaming of tabels.
+"""
+
 import typing as t
 
 from sqlalchemy.ext.declarative import as_declarative, declared_attr

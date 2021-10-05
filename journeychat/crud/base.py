@@ -1,3 +1,8 @@
+"""
+Note: This CRUD base class taken directly from template
+    https://github.com/tiangolo/full-stack-fastapi-postgresql
+"""
+
 from typing import Any, Dict, Generic, List, Optional, Type, TypeVar, Union
 
 from fastapi.encoders import jsonable_encoder

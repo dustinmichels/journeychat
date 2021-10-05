@@ -14,6 +14,7 @@ class CRUDRoom(CRUDBase[Room, RoomCreate, RoomUpdate]):
     def get_multi_if_public(
         self, db: Session, *, skip: int = 0, limit: int = 100
     ) -> List[Room]:
+        """Returns a list of all public (non-private) rooms"""
         return (
             db.query(self.model)
             .filter(Room.is_private == False)
