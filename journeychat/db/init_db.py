@@ -37,19 +37,14 @@ def init_db(db: Session) -> None:
     # Init Users
     users = []
     for u in USERS:
-        user_in = schemas.UserCreate(
-            display_name=u["display_name"],
-            email=u["email"],
-            username=u["username"],
-            password=u["password"],
-        )
+        user_in = schemas.UserCreate(**u)
         user = crud.user.create(db, obj_in=user_in)
         users.append(user)
 
     # Init Rooms
     rooms = []
     for r in ROOMS:
-        room_in = schemas.RoomCreate(name=r["name"], is_private=r["is_private"])
+        room_in = schemas.RoomCreate(**r)
         room = crud.room.create_with_owner(
             db, obj_in=room_in, owner_id=r.get("owner_id", 1)
         )

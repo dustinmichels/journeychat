@@ -1,23 +1,35 @@
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr, HttpUrl
+from pydantic import BaseModel, EmailStr, HttpUrl, validator
+
+from datetime import datetime
 
 
 class UserBase(BaseModel):
-    username: Optional[str]
-    display_name: Optional[str]
-    email: Optional[EmailStr] = None
-    avatar: Optional[HttpUrl] = None
+    email: EmailStr = None
+    username: str = None
     is_superuser: bool = False
+    display_name: Optional[str] = None
+    avatar: Optional[HttpUrl] = None
 
 
 # Properties to receive via API on creation
 class UserCreate(UserBase):
     email: EmailStr
+    username: str
     password: str
+    avatar: Optional[HttpUrl] = None
+    created_at: datetime = datetime.now()
 
-    # autogenerate avatar image
-    # avatar: HttpUrl = f"https://picsum.photos/seed/{username}/200/"
+    @validator("avatar", pre=True, always=True)
+    def set_default_avatar(cls, v, *, values):  # pylint: disable=no-self-argument
+        """
+        Create default avatar url if none is supplied.
+            Use the site picsum to get a random image,
+            with username as a random seed.
+        """
+        seed = values["username"]
+        return v or f"https://picsum.photos/seed/{seed}/200/"
 
 
 # Properties to receive via API on update

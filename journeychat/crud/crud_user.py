@@ -19,29 +19,23 @@ class CRUDUser(CRUDBase[User, schemas.UserCreate, schemas.UserUpdate]):
         return user.joined_rooms
 
     def create(self, db: Session, *, obj_in: schemas.UserCreate) -> User:
-        create_data = obj_in.dict()
-        create_data.pop("password")
-        db_obj = User(**create_data)
-        db_obj.hashed_password = get_password_hash(obj_in.password)
+        def _create_user():
+            create_data = obj_in.dict()
+            create_data.pop("password")
+            db_obj = User(**create_data)
+            db_obj.hashed_password = get_password_hash(obj_in.password)
+            db.add(db_obj)
+            db.commit()
+            return db_obj
 
-        # <--- INIT DEFAULTS
-        # TODO: move this initial logic to Pydantic model??
-
-        # add avatar
-        if not db_obj.avatar:
-            seed = db_obj.username
-            db_obj.avatar = f"https://picsum.photos/seed/{seed}/200/"
+        new_user = _create_user()
 
         # add to first room
         first_room = crud.room.get(db, 1)
-        if first_room and first_room not in db_obj.joined_rooms:
-            db_obj.joined_rooms.append(first_room)
-        # INIT DEFAULTS --->
+        if first_room and new_user not in first_room.members:
+            crud.room.add_member(db, room=first_room, user=new_user)
 
-        db.add(db_obj)
-        db.commit()
-
-        return db_obj
+        return new_user
 
     def is_superuser(self, user: User) -> bool:
         return user.is_superuser
