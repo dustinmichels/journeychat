@@ -25,11 +25,9 @@ def join_room(
     if not room:
         raise HTTPException(status_code=404, detail=f"Room with ID {room_id} not found")
 
-    # TODO: use crud?
-    joined_rooms = [x for x in current_user.joined_rooms]
-    joined_rooms.append(room)
-    crud.user.update(db=db, db_obj=current_user, obj_in={"joined_rooms": joined_rooms})
+    # TODO: security
 
+    room = crud.room.add_member(db=db, room=room, user=current_user)
     return room
 
 
@@ -51,14 +49,10 @@ def add_user(
     user_to_add = crud.user.get_by_username(db, username=username)
     if not user_to_add:
         raise HTTPException(
-            status_code=404, detail=f"User with username {username} not found"
+            status_code=404, detail=f"User with username '{username}' not found"
         )
 
-    if room_to_add not in current_user.joined_rooms:
+    if current_user not in room_to_add.members:
         raise HTTPException(status_code=404, detail=f"Not authenticated")
 
-    joined_rooms = [x for x in user_to_add.joined_rooms]
-    joined_rooms.append(room_to_add)
-    crud.user.update(db=db, db_obj=user_to_add, obj_in={"joined_rooms": joined_rooms})
-
-    return room_to_add
+    return crud.room.add_member(db=db, room=room_to_add, user=user_to_add)

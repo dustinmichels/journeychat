@@ -3,8 +3,7 @@ from sqlalchemy.orm import relationship
 
 from journeychat.db.base_class import Base
 
-# leave in - for import order
-from journeychat.models import joined_rooms
+from journeychat.models import room_members  # noqa: F401
 
 
 class User(Base):
@@ -17,8 +16,5 @@ class User(Base):
     hashed_password = Column(String, nullable=False)
     owned_rooms = relationship("Room", back_populates="owner")
     joined_rooms = relationship(
-        "Room", secondary="joined_rooms", back_populates="joined_users"
+        "Room", secondary="room_members", back_populates="members"
     )
-
-    # class Config:
-    #     orm_mode = True

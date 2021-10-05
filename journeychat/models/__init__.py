@@ -1,4 +1,4 @@
 from .room import Room
 from .user import User
-from .joined_rooms import Joined_Rooms
+from .room_members import Room_Members
 from .message import Message

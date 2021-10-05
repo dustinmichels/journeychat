@@ -31,8 +31,10 @@ class CRUDRoom(CRUDBase[Room, RoomCreate, RoomUpdate]):
         db.refresh(db_obj)
         return db_obj
 
-    def add_member(self, db: Session, *, user_id: int) -> Room:
-        ...
+    def add_member(self, db: Session, *, room: Room, user: User) -> Room:
+        members = [x for x in room.members]
+        members.append(user)
+        return self.update(db=db, db_obj=room, obj_in={"members": members})
 
 
 room = CRUDRoom(Room)

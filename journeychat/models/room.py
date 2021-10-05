@@ -3,8 +3,7 @@ from sqlalchemy.orm import relationship
 
 from journeychat.db.base_class import Base
 
-# leave in - for import order
-from journeychat.models import joined_rooms
+from journeychat.models import room_members  # noqa: F401
 
 
 class Room(Base):
@@ -13,7 +12,6 @@ class Room(Base):
     is_private = Column(Boolean, default=False)
     owner_id = Column(Integer, ForeignKey("user.id"), default=1)
     owner = relationship("User", back_populates="owned_rooms")
-    # TODO: rename as members
-    joined_users = relationship(
-        "User", secondary="joined_rooms", back_populates="joined_rooms"
+    members = relationship(
+        "User", secondary="room_members", back_populates="joined_rooms"
     )
