@@ -2,21 +2,6 @@ from journeychat.schemas import room
 
 from datetime import datetime
 
-ROOMS = [
-    {
-        "name": "General",
-        "is_private": False,
-    },
-    {
-        "name": "Sci-Fi Lovers",
-        "is_private": False,
-    },
-    {
-        "name": "Python Fans",
-        "is_private": False,
-    },
-]
-
 USERS = [
     {
         "username": "dustin",
@@ -31,6 +16,24 @@ USERS = [
         "display_name": "Joe",
     },
 ]
+
+
+ROOMS = [
+    {
+        "name": "General",
+        "is_private": False,
+    },
+    {
+        "name": "Sci-Fi Lovers",
+        "is_private": False,
+    },
+    {
+        "name": "Python Fans",
+        "is_private": False,
+    },
+    {"name": "Dustin's Room", "is_private": True, "owner_id": 2},
+]
+
 
 MESSAGES = [
     {

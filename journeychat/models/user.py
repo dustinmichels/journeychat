@@ -15,9 +15,10 @@ class User(Base):
     avatar = Column(String(256), nullable=True)
     is_superuser = Column(Boolean, default=False)
     hashed_password = Column(String, nullable=False)
+    owned_rooms = relationship("Room", back_populates="owner")
     joined_rooms = relationship(
         "Room", secondary="joined_rooms", back_populates="joined_users"
     )
 
-    class Config:
-        orm_mode = True
+    # class Config:
+    #     orm_mode = True

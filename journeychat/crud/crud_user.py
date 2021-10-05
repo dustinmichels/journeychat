@@ -12,6 +12,9 @@ class CRUDUser(CRUDBase[User, schemas.UserCreate, schemas.UserUpdate]):
     def get_by_email(self, db: Session, *, email: str) -> Optional[User]:
         return db.query(User).filter(User.email == email).first()
 
+    def get_by_username(self, db: Session, *, username: str) -> Optional[User]:
+        return db.query(User).filter(User.username == username).first()
+
     def create(self, db: Session, *, obj_in: schemas.UserCreate) -> User:
         create_data = obj_in.dict()
         create_data.pop("password")
@@ -28,7 +31,7 @@ class CRUDUser(CRUDBase[User, schemas.UserCreate, schemas.UserUpdate]):
 
         # add to first room
         first_room = crud.room.get(db, 1)
-        if first_room:
+        if first_room and first_room not in db_obj.joined_rooms:
             db_obj.joined_rooms.append(first_room)
         # INIT DEFAULTS --->
 

@@ -8,22 +8,27 @@
 
 ## ROOMS
 
-- `/rooms/` (GET) ❌
+- `/rooms/` (GET) ✅
   - List all rooms that are not private
-- `/rooms/` (POST) ❌?
+- `/rooms/` (POST) ✅
   - Create a new room
   - Request body:
     ```json
     { "name": "string", "is_private": true }
     ```
-- `/rooms/joined` (GET)
+- `/rooms/joined` (GET) ✅
   - List rooms the current user has joined
-- `/rooms/{room_id}` (GET)
-  - Get info about specific room
+- `/rooms/{room_id}` (GET) ✅
+  - Get info about specific room, if authorized
 - `/rooms/{room_id}` (PUT) ❌
   - Update specific room, if owner
 - `/rooms/{room_id}` (DELETE) ❌
   - Delete specific room, if owner
+
+## Members
+
+- `/members/{room_id}` (GET) ❌
+  - Get members for a specific room, if authenticated
 
 ## Actions
 

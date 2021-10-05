@@ -7,6 +7,8 @@ from journeychat.db import base  # noqa: F401
 from journeychat.initial_data import USERS, ROOMS, MESSAGES
 from sqlalchemy.orm import Session
 
+from journeychat.schemas import room
+
 logger = logging.getLogger(__name__)
 
 
@@ -34,16 +36,19 @@ def init_db(db: Session) -> None:
                 f"{settings.FIRST_SUPERUSER} already exists. "
             )
 
+    # # Add some dummy data
+    # crud.room.create(db, obj_in=room_in)
+    # crud.room.create_with_owner(db=db, obj_in=room_in, owner_id=current_user.id)
+
     # --- INIT OTHER DATA FROM FILE ---
     # Init Rooms
     for r in ROOMS:
-        room_in = schemas.RoomCreate(
-            name=r["name"],
-            is_private=r["is_private"],
+        room_in = schemas.RoomCreate(name=r["name"], is_private=r["is_private"])
+        _ = crud.room.create_with_owner(
+            db, obj_in=room_in, owner_id=r.get("owner_id", 1)
         )
-        room = crud.room.create(db, obj_in=room_in)
 
-    # Init Users
+    # # Init Users
     for u in USERS:
         user_in = schemas.UserCreate(
             display_name=u["display_name"],
@@ -52,8 +57,9 @@ def init_db(db: Session) -> None:
             # is_superuser=u.get("is_superuser", False),
             password=u["password"],
         )
-        user = crud.user.create(db, obj_in=user_in)
+        _ = crud.user.create(db, obj_in=user_in)
 
+    # Add some messages
     for m in MESSAGES:
         message_in = schemas.MessageCreate(
             user_id=m["user_id"],
@@ -61,25 +67,4 @@ def init_db(db: Session) -> None:
             timestamp=m["timestamp"],
             text=m["text"],
         )
-
-        message = crud.message.create(db, obj_in=message_in)
-
-        # for r in ROOMS:
-
-        # if not user.joined_rooms:
-        #     for r in ROOMS:
-        #         room_in = schemas.RoomCreate(
-        #             name=r["name"],
-        #             is_private=r["is_private"],
-        #         )
-        #         room = crud.room.create(db, obj_in=room_in)
-
-        #         # do thru crud?
-        #         user.joined_rooms.append(room)
-
-    # else:
-    #     logger.warning(
-    #         "Skipping creating superuser.  FIRST_SUPERUSER needs to be "
-    #         "provided as an env variable. "
-    #         "e.g.  FIRST_SUPERUSER=admin@api.coursemaker.io"
-    #     )
+        _ = crud.message.create(db, obj_in=message_in)
