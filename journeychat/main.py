@@ -10,7 +10,6 @@ root_router = APIRouter()
 app = FastAPI(title="JourneyChat API", openapi_url="/openapi.json")
 
 
-
 @root_router.get("/")
 def root() -> dict:
     """

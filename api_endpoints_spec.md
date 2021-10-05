@@ -12,7 +12,10 @@
   - List all rooms that are not private
 - `/rooms/` (POST)
   - Create a new room
-  - Request body: `name`, `is_private`
+  - Request body:
+    ```json
+    { "name": "string", "is_private": true }
+    ```
 - `/rooms/joined` (GET)
   - List rooms the current user has joined
 - `/rooms/{room_id}` (GET)
@@ -22,10 +25,12 @@
 - `/rooms/{room_id}` (DELETE)
   - Delete specific room, if owner
 
-## Invite
+## Actions
 
-- `/invite/` (POST)
-  - request body: `user_id`, `room_id`
+- `actions/invite/{room_id}/{username}` (POST)
+  - Invite particular user to particular room
+- `actions/join/{room_id}/` (POST)
+  - Join a particular room
 
 ## Messages
 
@@ -34,15 +39,16 @@
 
 ## WebSockets
 
-Send messages to:
-`ws://localhost:8000/api/v1/ws?token=`
+- `ws?token=`
+  - Send message via websockets
+
+Either:
+
+1. Separate web socket for each room?
+2. Include room data in message
 
 ## Notes
 
 - When you create a room you are added to it, and made the owner
 - You can only edit/delete room if you are the owner
 - You can invite someone to a room if you are already in it.
-
-```
-
-```

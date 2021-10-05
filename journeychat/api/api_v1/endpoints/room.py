@@ -1,7 +1,6 @@
 import asyncio
 from typing import Any, List, Optional
 
-# import httpx
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 

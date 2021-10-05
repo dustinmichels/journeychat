@@ -51,25 +51,20 @@ async def get_current_user(
 # --- Websocket Stuff ----
 
 
-async def get_cookie_or_token(
+async def ws_get_token(
     websocket: WebSocket,
-    session: Optional[str] = Cookie(None),
     token: Optional[str] = Query(None),
 ):
-    if session is None and token is None:
+    if token is None:
         await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
-    return session or token
+    return token
 
 
-# TODO: this should close socket instead
-async def get_current_user_ws(
-    db: Session = Depends(get_db), token: str = Depends(get_cookie_or_token)
+async def ws_get_current_user(
+    websocket: WebSocket,
+    db: Session = Depends(get_db),
+    token: str = Depends(ws_get_token),
 ) -> User:
-    credentials_exception = HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Could not validate credentials",
-        headers={"WWW-Authenticate": "Bearer"},
-    )
     try:
         payload = jwt.decode(
             token,
@@ -79,8 +74,8 @@ async def get_current_user_ws(
         )
         token_data = schemas.TokenPayload(**payload)
     except JWTError:
-        raise credentials_exception
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
     user = crud.user.get(db, id=token_data.sub)
     if user is None:
-        raise HTTPException(status_code=404, detail="User not found")
+        await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
     return user
