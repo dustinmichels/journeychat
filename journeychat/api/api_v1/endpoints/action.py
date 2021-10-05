@@ -16,7 +16,7 @@ def join_room(
     *,
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user),
-    room: Room = Depends(deps.get_room_authenticated),
+    room: Room = Depends(deps.get_room_if_member),
 ) -> Any:
     """
     Join a room.
@@ -30,7 +30,7 @@ def add_user(
     *,
     db: Session = Depends(deps.get_db),
     current_user: User = Depends(deps.get_current_user),
-    room: Room = Depends(deps.get_room_authenticated),
+    room: Room = Depends(deps.get_room_if_member),
 ) -> Any:
     """
     Invite a user to a room. If you are a member, they will be added immediately.

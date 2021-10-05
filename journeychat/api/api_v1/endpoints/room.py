@@ -43,25 +43,21 @@ def update_room(
     *,
     db: Session = Depends(deps.get_db),
     item_in: schemas.RoomUpdate,
-    current_user: models.User = Depends(deps.get_current_user),
-    room: Room = Depends(deps.get_room_authenticated),
+    room: Room = Depends(deps.get_room_if_owner),
 ) -> Any:
     """
     Update an item.
     """
-    if not crud.user.is_superuser(current_user) and (room.owner_id != current_user.id):
-        raise HTTPException(status_code=400, detail="Not enough permissions")
     return crud.room.update(db=db, db_obj=room, obj_in=item_in)
 
 
 @router.get("/{room_id}", status_code=200, response_model=Room)
 def read_room(
     *,
-    room: Room = Depends(deps.get_room_authenticated),
+    room: Room = Depends(deps.get_room_if_member),
 ) -> Any:
     """
-    Fetch a single room by ID.
-    Use dependency injection to assert: must be public or user must be member.
+    Fetch a single room by ID, if public or user is member.
     """
     return room
 
@@ -69,17 +65,14 @@ def read_room(
 @router.delete("/{room_id}", response_model=schemas.Room)
 def delete_room(
     *,
-    db: Session = Depends(deps.get_db),
     room_id: int,
-    current_user: models.User = Depends(deps.get_current_user),
-    room: Room = Depends(deps.get_room_authenticated),
+    db: Session = Depends(deps.get_db),
+    room: Room = Depends(deps.get_room_if_owner),
 ) -> Any:
     """
-    Delete an item.
+    Delete a room, if owner.
     """
-    if not crud.user.is_superuser(current_user) and (room.owner_id != current_user.id):
-        raise HTTPException(status_code=400, detail="Not enough permissions")
-    return crud.room.remove(db=db, id=id)
+    return crud.room.remove(db=db, id=room_id)
 
 
 @router.get("/joined/", response_model=List[Room])
@@ -88,7 +81,7 @@ def joined_rooms(
     current_user: User = Depends(deps.get_current_user),
 ) -> Any:
     """
-    Retrieve items.
+    Retrieve rooms signed-in user has joined.
     """
     return current_user.joined_rooms
 

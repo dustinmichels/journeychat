@@ -2,14 +2,13 @@ from typing import Generator, Optional
 
 from fastapi import Cookie, Depends, HTTPException, Query, WebSocket, status
 from jose import JWTError, jwt
-from journeychat import crud, schemas
+from journeychat import crud, models, schemas
 from journeychat.core.auth import oauth2_scheme
 from journeychat.core.config import settings
 from journeychat.db.session import SessionLocal
 from journeychat.models.user import User
 from pydantic import BaseModel
 from sqlalchemy.orm.session import Session
-
 
 # class TokenData(BaseModel):
 #     username: Optional[str] = None
@@ -48,25 +47,36 @@ async def get_current_user(
     return user
 
 
-def get_room_authenticated(
+def get_room_if_member(
+    *,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
-    *,
     room_id: int,
 ):
     """
-    Return room with given ID
-        if: room is public or user is a member
-        else: raise http error
+    Return room with given ID, if user is member or room is public.
+    Otherwise, raise http error.
     """
     room = crud.room.get(db=db, id=room_id)
     if not room:
         raise HTTPException(status_code=404, detail=f"Room with ID {room_id} not found")
     if room.is_private and current_user not in room.members:
         raise HTTPException(
-            status_code=404,
-            detail=f"Room with ID {room_id} not found, or you don't have permission to view",
+            status_code=400,
+            detail=f"You do not have permission to access {room_id}",
         )
+    return room
+
+
+def get_room_if_owner(
+    current_user: models.User = Depends(get_current_user),
+    room: models.Room = Depends(get_room_if_member),
+):
+    """
+    Return room if owner, otherwise return http error
+    """
+    if not crud.user.is_superuser(current_user) and (room.owner_id != current_user.id):
+        raise HTTPException(status_code=400, detail="Not enough permissions")
     return room
 
 

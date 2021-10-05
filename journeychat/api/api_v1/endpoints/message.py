@@ -25,7 +25,7 @@ def get_messages_for_room(
     db: Session = Depends(deps.get_db),
     skip: int = 0,
     limit: int = 100,
-    room: Room = Depends(deps.get_room_authenticated),
+    room: Room = Depends(deps.get_room_if_member),
 ) -> Any:
     """
     Retrieve all messages for given rooms.
