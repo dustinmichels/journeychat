@@ -10,7 +10,7 @@
 
 - `/rooms/` (GET) ❌
   - List all rooms that are not private
-- `/rooms/` (POST) ❌
+- `/rooms/` (POST) ❌?
   - Create a new room
   - Request body:
     ```json
@@ -29,8 +29,9 @@
 
 - `actions/invite/{room_id}/{username}` (POST) ❌
   - Invite particular user to particular room
+  - They will be automatically added
 - `actions/join/{room_id}/` (POST) ❌
-  - Join a particular room
+  - Join a particular room, if public
 
 ## Messages
 
@@ -39,22 +40,15 @@
 
 ## WebSockets
 
-Connect to websocket:
-`ws://.../ws?token=`
+- `ws://.../ws?token=...`
+  - Connect to websocket
+- Send messages as stringified JSON:
+  ```json
+  { "user_id": int, "room_id": int, "timestamp": str, "text": str }
+  ```
 
-Send messages as stringified JSON:
-
-```json
-{ "user_id": int, "room_id": int, "text": str }
-```
-
-Either:
-
-1. Separate web socket for each room?
-2. Include room data in message
-
-## Notes
+## Security Flow
 
 - When you create a room you are added to it, and made the owner
-- You can only edit/delete room if you are the owner
 - You can invite someone to a room if you are already in it.
+- You can only edit/delete room if you are the owner
