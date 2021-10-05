@@ -10,7 +10,7 @@ from journeychat.models import Room
 router = APIRouter()
 
 
-@router.get("/room/{room_id}/", response_model=List[schemas.Message])
+@router.get("/room/{room_id}/", response_model=List[schemas.MessageNested])
 def get_messages_for_room(
     *,
     room_id: int,

@@ -3,6 +3,8 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from journeychat.schemas.user import User
+
 
 class MessageBase(BaseModel):
     user_id: int
@@ -28,3 +30,7 @@ class MessageInDBBase(MessageBase):
 
 class Message(MessageInDBBase):
     ...
+
+
+class MessageNested(MessageInDBBase):
+    user: User

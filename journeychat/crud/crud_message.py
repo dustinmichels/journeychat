@@ -4,11 +4,13 @@ from sqlalchemy.orm import Session
 
 from journeychat.crud.base import CRUDBase
 from journeychat.models.message import Message
-from journeychat.schemas.message import MessageCreate, MessageUpdate
+
+# from journeychat.schemas.message import MessageCreate, MessageUpdate
+from journeychat import schemas
 
 
-class CRUDMessage(CRUDBase[Message, MessageCreate, MessageUpdate]):
-    def create(self, db: Session, *, obj_in: MessageCreate) -> Message:
+class CRUDMessage(CRUDBase[Message, schemas.MessageCreate, schemas.MessageUpdate]):
+    def create(self, db: Session, *, obj_in: schemas.MessageCreate) -> Message:
         """Override base create function, so as to omit json encoder step"""
         create_data = obj_in.dict()
         db_obj = Message(**create_data)
@@ -18,7 +20,7 @@ class CRUDMessage(CRUDBase[Message, MessageCreate, MessageUpdate]):
 
     def get_multi_by_room(
         self, db: Session, *, room_id: int, skip: int = 0, limit: int = 100
-    ) -> List[Message]:
+    ) -> List[schemas.MessageNested]:
         """
         Get messages for a given room.
 
