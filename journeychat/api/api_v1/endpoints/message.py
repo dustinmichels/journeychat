@@ -4,16 +4,11 @@ from typing import Any, List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
-from journeychat import crud
+from journeychat import crud, schemas
 from journeychat.api import deps
-from journeychat.schemas.room import Room, RoomCreate, RoomSearchResults
-from journeychat import schemas
-
-from journeychat.schemas.user import UserUpdate
-
-
 from journeychat.models.user import User
-
+from journeychat.schemas.room import Room, RoomCreate, RoomSearchResults
+from journeychat.schemas.user import UserUpdate
 
 router = APIRouter()
 

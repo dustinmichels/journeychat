@@ -5,7 +5,6 @@ from fastapi.responses import HTMLResponse
 from journeychat.api.api_v1.api import api_router
 from journeychat.core.config import settings
 
-
 root_router = APIRouter()
 app = FastAPI(title="JourneyChat API", openapi_url="/openapi.json")
 

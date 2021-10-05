@@ -1,14 +1,13 @@
 import json
-from typing import List, Optional
+from typing import List
 
-from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect
+from fastapi import APIRouter, Depends, WebSocket, WebSocketDisconnect
+from fastapi.encoders import jsonable_encoder
+from sqlalchemy.orm import Session
+
 from journeychat import crud, schemas
 from journeychat.api import deps
 from journeychat.models.user import User
-from sqlalchemy.orm import Session
-
-from fastapi.encoders import jsonable_encoder
-
 
 router = APIRouter()
 

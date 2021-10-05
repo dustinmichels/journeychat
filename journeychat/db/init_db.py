@@ -1,12 +1,12 @@
 import logging
 from typing import List
 
+from sqlalchemy.orm import Session
+
 from journeychat import crud, schemas
 from journeychat.core.config import settings
 from journeychat.db import base  # noqa: F401
-from journeychat.initial_data import USERS, ROOMS, MESSAGES
-from sqlalchemy.orm import Session
-
+from journeychat.initial_data import MESSAGES, ROOMS, USERS
 from journeychat.schemas import room
 
 logger = logging.getLogger(__name__)
@@ -65,7 +65,6 @@ def init_db(db: Session) -> None:
     # Add all users to the first room
     for user in users:
         crud.room.add_member(db=db, room=rooms[0], user=user)
-
 
     # Add some messages
     for m in MESSAGES:

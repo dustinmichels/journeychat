@@ -1,14 +1,13 @@
 from typing import List
+
+from fastapi.encoders import jsonable_encoder
+from sqlalchemy.orm import Session
+
+from journeychat import crud
 from journeychat.crud.base import CRUDBase
 from journeychat.models.room import Room
 from journeychat.models.user import User
 from journeychat.schemas.room import RoomCreate, RoomUpdate
-
-from journeychat import crud
-
-from fastapi.encoders import jsonable_encoder
-
-from sqlalchemy.orm import Session
 
 
 class CRUDRoom(CRUDBase[Room, RoomCreate, RoomUpdate]):

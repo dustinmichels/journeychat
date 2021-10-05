@@ -1,9 +1,11 @@
+from datetime import datetime
 from typing import List
+
+from sqlalchemy.orm import Session
+
 from journeychat.crud.base import CRUDBase
 from journeychat.models.message import Message
 from journeychat.schemas.message import MessageCreate, MessageUpdate
-from datetime import datetime
-from sqlalchemy.orm import Session
 
 
 class CRUDMessage(CRUDBase[Message, MessageCreate, MessageUpdate]):

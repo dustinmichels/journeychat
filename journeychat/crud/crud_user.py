@@ -1,11 +1,11 @@
 from typing import Any, Dict, Optional, Union
 
-from journeychat import models, schemas
+from sqlalchemy.orm import Session
+
+from journeychat import crud, models, schemas
 from journeychat.core.security import get_password_hash
 from journeychat.crud.base import CRUDBase
-from journeychat import crud
 from journeychat.models import User
-from sqlalchemy.orm import Session
 
 
 class CRUDUser(CRUDBase[User, schemas.UserCreate, schemas.UserUpdate]):

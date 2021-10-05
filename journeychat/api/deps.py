@@ -2,13 +2,14 @@ from typing import Generator, Optional
 
 from fastapi import Cookie, Depends, HTTPException, Query, WebSocket, status
 from jose import JWTError, jwt
+from pydantic import BaseModel
+from sqlalchemy.orm.session import Session
+
 from journeychat import crud, models, schemas
 from journeychat.core.auth import oauth2_scheme
 from journeychat.core.config import settings
 from journeychat.db.session import SessionLocal
 from journeychat.models.user import User
-from pydantic import BaseModel
-from sqlalchemy.orm.session import Session
 
 # class TokenData(BaseModel):
 #     username: Optional[str] = None

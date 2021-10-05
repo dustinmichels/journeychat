@@ -1,8 +1,7 @@
-from sqlalchemy import Integer, String, Column, Boolean, ForeignKey
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 from journeychat.db.base_class import Base
-
 from journeychat.models import room_members  # noqa: F401
 
 

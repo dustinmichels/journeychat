@@ -4,13 +4,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm.session import Session
 
-from journeychat import crud
-from journeychat import schemas
+from journeychat import crud, schemas
 from journeychat.api import deps
-from journeychat.core.auth import (
-    authenticate,
-    create_access_token,
-)
+from journeychat.core.auth import authenticate, create_access_token
 from journeychat.models.user import User
 
 router = APIRouter()

@@ -1,7 +1,6 @@
 from fastapi import APIRouter
 
-from journeychat.api.api_v1.endpoints import auth, room, chat, message, action, member
-
+from journeychat.api.api_v1.endpoints import action, auth, chat, member, message, room
 
 api_router = APIRouter()
 

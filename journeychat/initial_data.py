@@ -1,6 +1,6 @@
-from journeychat.schemas import room
-
 from datetime import datetime
+
+from journeychat.schemas import room
 
 USERS = [
     {

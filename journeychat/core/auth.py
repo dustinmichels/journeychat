@@ -1,14 +1,13 @@
-from typing import Optional, MutableMapping, List, Union
 from datetime import datetime, timedelta
+from typing import List, MutableMapping, Optional, Union
 
 from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.orm.session import Session
 from jose import jwt
+from sqlalchemy.orm.session import Session
 
-from journeychat.models.user import User
 from journeychat.core.config import settings
 from journeychat.core.security import verify_password
-
+from journeychat.models.user import User
 
 JWTPayloadMapping = MutableMapping[
     str, Union[datetime, bool, str, List[str], List[int]]

@@ -1,6 +1,6 @@
-from pydantic import BaseModel, HttpUrl
-
 from typing import Sequence
+
+from pydantic import BaseModel, HttpUrl
 
 
 class RoomBase(BaseModel):
