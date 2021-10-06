@@ -22,6 +22,18 @@ def join_room(
     """
     return crud.room.add_member(db=db, room=room, user=current_user)
 
+@router.put("/leave/{room_id}", response_model=schemas.Room)
+def leave_room(
+    *,
+    db: Session = Depends(deps.get_db),
+    current_user: User = Depends(deps.get_current_user),
+    room: Room = Depends(deps.get_room_if_member),
+) -> Any:
+    """
+    Leave a room.
+    """
+    return crud.room.remove_member(db=db, room=room, user=current_user)
+
 
 @router.put("/invite/{room_id}/{username}", response_model=schemas.Room)
 def add_user(

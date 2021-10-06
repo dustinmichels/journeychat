@@ -46,6 +46,11 @@ class CRUDRoom(CRUDBase[Room, RoomCreate, RoomUpdate]):
         members.append(user)
         return self.update(db=db, db_obj=room, obj_in={"members": members})
 
+    def remove_member(self, db: Session, *, room: Room, user: User) -> Room:
+        """Remove member from room."""
+        members = [x for x in room.members if x.id != user.id]
+        return self.update(db=db, db_obj=room, obj_in={"members": members})
+
     def get_members(self, *, room: Room) -> List[User]:
         """Return list of members of a room"""
         return room.members
