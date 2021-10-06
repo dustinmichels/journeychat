@@ -9,6 +9,13 @@ from journeychat import crud, schemas
 from journeychat.api import deps
 from journeychat.models.user import User
 
+from sqlalchemy import inspect
+
+
+def object_as_dict(obj):
+    return {c.key: getattr(obj, c.key) for c in inspect(obj).mapper.column_attrs}
+
+
 router = APIRouter()
 
 
@@ -47,14 +54,34 @@ async def websocket_endpoint(
 
             # commit message to db
             json_data = json.loads(data)
+            print("json_data")
+            print(json_data)
+
             message_obj = schemas.MessageCreate(**json_data)
-            crud.message.create(db=db, obj_in=message_obj)
+            print("message_obj")
+            print(message_obj)
+
+            msg_model = crud.message.create(db=db, obj_in=message_obj)
+            print("msg_model")
+            print(msg_model)
+
+            msg_dict = object_as_dict(msg_model)
+            print("msg_dict")
+            print(msg_dict)
+
+            response = schemas.MessageNested(**msg_dict)
+            print("response")
+            print(response)
+
+            response_json = jsonable_encoder(response)
+            print("response_json")
+            print(response_json)
 
             # For future use?
             # json_data = jsonable_encoder(message_obj)
             # json_data_str = json.dumps(json_data)
 
-            await manager.broadcast(data)
+            await manager.broadcast(response_json)
             # await manager.broadcast(f"{current_user.username} says: {message_obj.text}")
 
     except WebSocketDisconnect:

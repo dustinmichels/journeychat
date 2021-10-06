@@ -10,7 +10,6 @@ class User(Base):
     email = Column(String, index=True, nullable=False)
     username = Column(String, nullable=True)
     is_superuser = Column(Boolean, default=False)
-    display_name = Column(String, nullable=True)
     avatar = Column(String(256), nullable=True)
     hashed_password = Column(String, nullable=False)
     created_at = Column(DateTime)

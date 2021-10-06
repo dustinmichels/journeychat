@@ -8,15 +8,12 @@ from datetime import datetime
 class UserBase(BaseModel):
     email: EmailStr = None
     username: str = None
-    is_superuser: bool = False
-    display_name: Optional[str] = None
     avatar: Optional[HttpUrl] = None
 
 
 # Properties to receive via API on creation
 class UserCreate(UserBase):
-    email: EmailStr
-    username: str
+    is_superuser: bool = False
     password: str
     avatar: Optional[HttpUrl] = None
     created_at: datetime = datetime.now()
@@ -39,6 +36,7 @@ class UserUpdate(UserBase):
 
 class UserInDBBase(UserBase):
     id: int
+    created_at: datetime
 
     class Config:
         orm_mode = True
@@ -47,6 +45,7 @@ class UserInDBBase(UserBase):
 # Additional properties stored in DB but not returned by API
 class UserInDB(UserInDBBase):
     hashed_password: str
+    is_superuser: bool
 
 
 # Additional properties to return via API
