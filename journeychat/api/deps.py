@@ -109,3 +109,26 @@ async def ws_get_current_user(
     if user is None:
         await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
     return user
+
+
+async def ws_test(
+    db: Session = Depends(get_db),
+    token: Optional[str] = Query(None),
+) -> User:
+    print("INSIDE WS TEST!!")
+    print(token)
+    return ""
+    # try:
+    #     payload = jwt.decode(
+    #         token,
+    #         settings.JWT_SECRET,
+    #         algorithms=[settings.ALGORITHM],
+    #         options={"verify_aud": False},
+    #     )
+    #     token_data = schemas.TokenPayload(**payload)
+    # except JWTError:
+    #     await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+    # user = crud.user.get(db, id=token_data.sub)
+    # if user is None:
+    #     await websocket.close(code=status.WS_1008_POLICY_VIOLATION)
+    # return user
