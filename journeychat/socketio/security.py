@@ -1,24 +1,14 @@
-from typing import Generator, Optional
-
-from fastapi import Depends, HTTPException, Query, WebSocket, status
 from jose import JWTError, jwt
-from sqlalchemy.orm.session import Session
-
-from journeychat import crud, models, schemas
-from journeychat.core.auth import oauth2_scheme
+from journeychat import crud, schemas
+from journeychat.api import deps
 from journeychat.core.config import settings
-from journeychat.db.session import SessionLocal
-from journeychat.models.room import Room
 from journeychat.models.user import User
+from sqlalchemy.orm.session import Session
 
 from socketio.exceptions import ConnectionRefusedError
 
 
-from fastapi import Depends
-from journeychat.api import deps
-
-
-async def get_authenticated_user(token):
+async def get_authenticated_user(token) -> User:
     db: Session = next(deps.get_db())
     try:
         payload = jwt.decode(
