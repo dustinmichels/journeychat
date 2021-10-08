@@ -1,12 +1,12 @@
+import socketio
+from socketio.exceptions import ConnectionRefusedError
+from sqlalchemy.orm.session import Session
+
 from journeychat import crud, schemas
 from journeychat.api import deps
 from journeychat.core.config import settings
 from journeychat.models.user import User
 from journeychat.socketio.security import get_authenticated_user
-from sqlalchemy.orm.session import Session
-
-import socketio
-from socketio.exceptions import ConnectionRefusedError
 
 # Set all CORS enabled origins
 origins = None

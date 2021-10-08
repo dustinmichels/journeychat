@@ -22,6 +22,7 @@ def join_room(
     """
     return crud.room.add_member(db=db, room=room, user=current_user)
 
+
 @router.put("/leave/{room_id}", response_model=schemas.Room)
 def leave_room(
     *,

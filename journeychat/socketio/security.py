@@ -1,11 +1,11 @@
 from jose import JWTError, jwt
+from socketio.exceptions import ConnectionRefusedError
+from sqlalchemy.orm.session import Session
+
 from journeychat import crud, schemas
 from journeychat.api import deps
 from journeychat.core.config import settings
 from journeychat.models.user import User
-from sqlalchemy.orm.session import Session
-
-from socketio.exceptions import ConnectionRefusedError
 
 
 async def get_authenticated_user(token) -> User:

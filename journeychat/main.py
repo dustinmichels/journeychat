@@ -4,7 +4,6 @@ from fastapi.responses import HTMLResponse
 
 from journeychat.api.api_v1.api import api_router
 from journeychat.core.config import settings
-
 from journeychat.socketio import ws_app
 
 root_router = APIRouter()
