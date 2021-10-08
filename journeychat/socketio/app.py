@@ -22,29 +22,30 @@ sio = socketio.AsyncServer(
 )
 ws_app = socketio.ASGIApp(sio)
 
-
-CONNECTIONS = []
+CONNECTIONS = {}
 
 
 def refresh_rooms(user, sid):
     for room in user.joined_rooms:
-        print(f"Adding to room {room.id} ({room.name})")
+        # print(f"Adding to room {room.id} ({room.name})")
         sio.enter_room(sid, room.id)
 
 
 @sio.event
 async def connect(sid, environ, auth):
     print("> connect ", sid)
-
     # will return authenticated user or raise error
     user = await get_authenticated_user(auth["token"])
 
-    CONNECTIONS.append(sid)
+    CONNECTIONS[sid] = user.username
+    print(CONNECTIONS)
 
     # update list of rooms user is in
     refresh_rooms(user, sid)
-
     print(f"User {user.username} is in rooms: {sio.rooms(sid)}")
+
+    for room in sio.rooms(sid):
+        await sio.emit("online-ping", data=user.username, room=room, skip_sid=sid)
 
     # session = await sio.get_session(sid)
     # CONNECTIONS.append(session)
@@ -52,7 +53,6 @@ async def connect(sid, environ, auth):
     # user = authenticate(auth["token"])
     # await sio.save_session(sid, {"username": user["username"]})
     # refresh_rooms(user, sid)
-    print("CONNECTIONS", CONNECTIONS)
 
 
 @sio.on("new-message")
@@ -80,3 +80,5 @@ async def recieve_chat(sid, data):
 @sio.event
 def disconnect(sid):
     print("disconnect ", sid)
+    del CONNECTIONS[sid]
+    print(CONNECTIONS)
