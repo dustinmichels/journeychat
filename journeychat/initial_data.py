@@ -15,6 +15,18 @@ USERS = [
         "password": "joe",
         "display_name": "Joe",
     },
+    {
+        "username": "sam",
+        "email": "sam@sam.com",
+        "password": "sam",
+        "display_name": "Sam",
+    },
+    {
+        "username": "mike123",
+        "email": "mike@sam.com",
+        "password": "mike",
+        "display_name": "Mikey",
+    },
 ]
 
 
@@ -24,7 +36,7 @@ ROOMS = [
         "is_private": False,
     },
     {
-        "name": "Sci-Fi Lovers",
+        "name": "Sci-Fi Readers",
         "is_private": False,
     },
     {
@@ -37,10 +49,39 @@ ROOMS = [
 
 MESSAGES = [
     {
-        # "email": "dustin@dustin.com",
         "user_id": 2,
         "room_id": 1,
         "timestamp": datetime(2021, 10, 4, 2, 20, 35),
-        "text": "hello friends!",
-    }
+        "text": "Hello friends!",
+    },
+    {
+        "user_id": 3,
+        "room_id": 1,
+        "timestamp": datetime(2021, 10, 4, 2, 25, 35),
+        "text": "What's up?",
+    },
+    {
+        "user_id": 4,
+        "room_id": 1,
+        "timestamp": datetime(2021, 10, 4, 2, 27, 35),
+        "text": "Coding is fun.",
+    },
+    {
+        "user_id": 2,
+        "room_id": 2,
+        "timestamp": datetime(2021, 10, 4, 2, 20, 35),
+        "text": "Kim Stanley Robinson is a cool author to check out!",
+    },
+    {
+        "user_id": 2,
+        "room_id": 3,
+        "timestamp": datetime(2021, 10, 4, 3, 20, 35),
+        "text": "Python is cool",
+    },
+    {
+        "user_id": 3,
+        "room_id": 3,
+        "timestamp": datetime(2021, 10, 4, 3, 22, 35),
+        "text": "Agreed.",
+    },
 ]

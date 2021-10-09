@@ -50,11 +50,11 @@ def init_db(db: Session) -> None:
         )
         rooms.append(room)
 
-    # Add all users to the first room
+    # Add all users to first room
     for user in users:
         crud.room.add_member(db=db, room=rooms[0], user=user)
 
-    # Add some messages
+    # Add some default messages
     for m in MESSAGES:
         message_in = schemas.MessageCreate(
             user_id=m["user_id"],
@@ -63,3 +63,8 @@ def init_db(db: Session) -> None:
             text=m["text"],
         )
         _ = crud.message.create(db, obj_in=message_in)
+
+        # add these users to rooms, while we're at it
+        user = crud.user.get(db, m["user_id"])
+        room = crud.room.get(db, m["room_id"])
+        crud.room.add_member(db=db, room=room, user=user)

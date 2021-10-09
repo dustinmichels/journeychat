@@ -1,5 +1,6 @@
 #! /usr/bin/env bash
 
+
 # Let the DB start
 python ./journeychat/backend_pre_start.py
 
